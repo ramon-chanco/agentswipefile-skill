@@ -1,6 +1,6 @@
 # Agent Swipe File
 
-![Agent Swipe File: a refined creative reference archive](assets/brand-archive.webp)
+![Agent Swipe File. Good references. Better starting points.](assets/agent-swipe-file-banner.png)
 
 Find the right creative reference library for your next ad, email, website, app, or agent workflow.
 
@@ -27,7 +27,11 @@ Examples:
 - [Human and agent guide](https://agentswipefile.com/for-agents/)
 - Resource Markdown: `https://agentswipefile.com/resources/{slug}.md`
 
-The optional Python helper uses only the standard library. It sends public GET requests and does not send the user's task to the directory. Matching happens locally. The primary domain is agentswipefile.com; the skill includes the first-party Netlify address as a temporary DNS-transition fallback.
+The optional Python helper uses only the standard library. It sends public GET requests to agentswipefile.com and does not send the user's task to the directory. Matching happens locally. If the live catalog is unavailable, report that limitation rather than inventing facts.
+
+## Understand the plan before recommending
+
+Free access may be a limited preview. It does not mean the full library, MCP, API or plugin is free. Read the complete `workflow.pricing` object: plan tiers, billing periods, seat minimums, preview limits and separate business access. For example, Refero offers a limited free preview alongside paid Pro, Team and Lifetime access. Use the live catalog and official pricing page for current amounts.
 
 The skill treats vendor pages as evidence, preserves uncertainty, and does not install tools, connect accounts, or spend money. Featured placement does not influence its keyword ranking.
 

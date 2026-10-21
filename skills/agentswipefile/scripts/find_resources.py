@@ -9,23 +9,19 @@ import urllib.error
 import urllib.request
 
 PRIMARY = 'https://agentswipefile.com/catalog.json'
-FALLBACK = 'https://agentswipefile.netlify.app/catalog.json'
 
 def load_catalog(path=None):
     if path:
         return json.loads(Path(path).read_text()),'local file'
-    last = None
-    for url in [PRIMARY,FALLBACK]:
-        try:
-            request=urllib.request.Request(url,headers={'User-Agent':'AgentSwipeFile-Skill/1.0'})
-            with urllib.request.urlopen(request,timeout=20) as response:
-                catalog=json.loads(response.read(4_000_000))
-            if not isinstance(catalog.get('resources'),list):
-                raise ValueError('The response has no resource list')
-            return catalog,url
-        except (urllib.error.URLError,ValueError,TimeoutError) as exc:
-            last=exc
-    raise RuntimeError('The public catalog is unavailable. Do not invent live resource facts.') from last
+    try:
+        request=urllib.request.Request(PRIMARY,headers={'User-Agent':'AgentSwipeFile-Skill/1.1'})
+        with urllib.request.urlopen(request,timeout=20) as response:
+            catalog=json.loads(response.read(4_000_000))
+        if not isinstance(catalog.get('resources'),list):
+            raise ValueError('The response has no resource list')
+        return catalog,PRIMARY
+    except (urllib.error.URLError,ValueError,TimeoutError) as exc:
+        raise RuntimeError('The public catalog is unavailable. Do not invent live resource facts.') from exc
 
 def shortlist(catalog,query='',asset=None,requires=None,platform=None,free=False,limit=3):
     tokens=set(re.findall(r'[a-z0-9]+',query.lower()))-{'a','an','and','for','the','to','with','i','need'}
@@ -50,7 +46,7 @@ def main():
     parser.add_argument('--asset',choices=['ads','ugc','emails','sms','websites','apps','social','presentations','context','design'])
     parser.add_argument('--requires',choices=['mcp','api','figmaPlugin','browserExtension','markdown'])
     parser.add_argument('--platform')
-    parser.add_argument('--free',action='store_true')
+    parser.add_argument('--free',action='store_true',help='Require documented free access, which may be a limited preview. This does not establish free full-library or connector access.')
     parser.add_argument('--limit',type=int,default=3)
     parser.add_argument('--catalog-file')
     args=parser.parse_args()
@@ -60,7 +56,7 @@ def main():
         results=shortlist(catalog,args.query,args.asset,args.requires,args.platform,args.free,args.limit)
     except (OSError,ValueError,RuntimeError) as exc:
         print(str(exc),file=sys.stderr);return 1
-    print(json.dumps({'catalogSource':source,'usedTemporaryFallback':source==FALLBACK,'updatedAt':catalog.get('updatedAt'),'matches':results,'note':'Keyword shortlist only. Check current official pricing and integration requirements before recommending.'},indent=2,ensure_ascii=False))
+    print(json.dumps({'catalogSource':source,'usedTemporaryFallback':False,'updatedAt':catalog.get('updatedAt'),'matches':results,'note':'Keyword shortlist only. Free access can be a limited preview; read all relevant pricing plans, billing periods and connector entitlements before recommending.'},indent=2,ensure_ascii=False))
     return 0
 
 if __name__=='__main__':sys.exit(main())
