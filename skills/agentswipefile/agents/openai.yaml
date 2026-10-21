@@ -1,0 +1,9 @@
+interface:
+  display_name: "Agent Swipe File"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#2855F6"
+  short_description: "Find creative references that fit your workflow"
+  default_prompt: "Use $agentswipefile to find the best reference libraries for my task, budget, and agent workflow."
+policy:
+  allow_implicit_invocation: true
