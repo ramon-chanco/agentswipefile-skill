@@ -9,6 +9,7 @@ Primary origin: `https://agentswipefile.com`. Fetch `/catalog.json` without auth
 | `slug`, `name`, `url`, `outboundUrl` | Stable directory key, display name, original vendor address, and tracked referral link |
 | `description`, `kind`, `bestFor`, `editorialNote` | Original editorial purpose and fit guidance |
 | `categories` | Asset types covered, not platform integrations |
+| `subcategories` | Secondary topic keys, such as hooks or design context. These describe the reference content, not a native integration. |
 | `image` | Source-page screenshot preview relative to the catalog origin |
 | `checkedAt`, `sourceStatus` | Public source review date and scope |
 | `access` | Documented entry points; `status` states what was actually checked |
@@ -43,5 +44,22 @@ Read every relevant plan. Never report the first `$0` plan as the cost of the co
 ## Asset values
 
 `ads`, `ugc`, `emails`, `sms`, `websites`, `apps`, `social`, `presentations`, `context`, `design`.
+
+## Secondary topics
+
+The catalog exposes `taxonomy.categories` and `taxonomy.subcategories` as key-to-label maps. Resources retain the ten primary asset categories and can also have zero or more secondary topics:
+
+- `design-context`: Design context / DESIGN.md.
+- `agent-skills`: Agent skills and tool directories.
+- `prompts`: Reusable prompts.
+- `video-motion`: Video and motion references.
+- `hooks`: Opening hooks.
+- `branding-type`: Branding and typography.
+- `sections-components`: Website sections and UI components.
+- `product-flows`: Paywalls, onboarding and pricing-page references.
+
+Use `--subcategory` together with `--asset`, `--requires`, `--platform` and `--free`. These filters intersect; never silently relax a hard requirement. A resource in `agent-skills` does not automatically offer MCP. A resource with a pricing-page topic does not automatically have verified subscription pricing. The homepage supports shareable `?topic=hooks` filters; these retain the collection canonical and do not create additional thin SEO pages.
+
+Read `workflow.screenshot.kind`: a vendor social preview is different from a captured source page. Neither establishes access to authenticated content.
 
 If older catalog fields are missing, use the editorial fields for discovery and verify requirements against official sources. Never infer a native integration from a generic Browser entry.

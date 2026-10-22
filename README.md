@@ -22,6 +22,13 @@ Examples:
 
 ## Public entry points
 
+Browse ten asset categories and eight more specific topics, including hooks, prompts, brand identities, UI components and paywalls. The Python helper can combine them with documented integrations and pricing requirements:
+
+```bash
+python3 skills/agentswipefile/scripts/find_resources.py --asset apps --subcategory product-flows --requires mcp
+python3 skills/agentswipefile/scripts/find_resources.py --asset social --subcategory hooks
+```
+
 - [Structured catalog](https://agentswipefile.com/catalog.json)
 - [Agent index](https://agentswipefile.com/llms.txt)
 - [Human and agent guide](https://agentswipefile.com/for-agents/)

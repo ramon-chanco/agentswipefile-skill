@@ -2,7 +2,7 @@
 name: agentswipefile
 description: Find creative swipe-file libraries and agent context tools for ads, UGC, emails, SMS, websites, apps, social content, decks, and design. Match resources to the task, budget, and available integrations using Agent Swipe File's public catalog.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Agent Swipe File
@@ -24,6 +24,17 @@ python3 scripts/find_resources.py --query "paid social references" --asset ads -
 ```
 
 Run the script from this skill folder or use its absolute path. It performs public GET requests only. `--catalog-file` supports a previously downloaded catalog. Keyword scores are a discovery aid; assess fit from the actual resource evidence before making a recommendation.
+
+## Browse by asset and topic
+
+Keep the ten primary asset types and use secondary topics when the task is more specific. Read the live catalog's `taxonomy` maps. The optional helper supports `--subcategory design-context`, `agent-skills`, `prompts`, `video-motion`, `hooks`, `branding-type`, `sections-components` or `product-flows`. For example:
+
+```bash
+python3 scripts/find_resources.py --asset apps --subcategory product-flows --requires mcp
+python3 scripts/find_resources.py --asset social --subcategory hooks
+```
+
+Topics describe content, not integration availability. Intersect every stated requirement. If a topic is absent from an older catalog, mark that limitation instead of inventing a match.
 
 ## Assess fit and access
 
