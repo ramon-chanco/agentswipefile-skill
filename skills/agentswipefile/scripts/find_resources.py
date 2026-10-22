@@ -14,7 +14,7 @@ def load_catalog(path=None):
     if path:
         return json.loads(Path(path).read_text()),'local file'
     try:
-        request=urllib.request.Request(PRIMARY,headers={'User-Agent':'AgentSwipeFile-Skill/1.2'})
+        request=urllib.request.Request(PRIMARY,headers={'User-Agent':'AgentSwipeFile-Skill/1.3'})
         with urllib.request.urlopen(request,timeout=20) as response:
             catalog=json.loads(response.read(4_000_000))
         if not isinstance(catalog.get('resources'),list):
@@ -23,19 +23,23 @@ def load_catalog(path=None):
     except (urllib.error.URLError,ValueError,TimeoutError) as exc:
         raise RuntimeError('The public catalog is unavailable. Do not invent live resource facts.') from exc
 
-def shortlist(catalog,query='',asset=None,requires=None,platform=None,free=False,limit=3,subcategory=None):
+def shortlist(catalog,query='',asset=None,requires=None,platform=None,free=False,limit=3,subcategory=None,collection=None,section=None):
     tokens=set(re.findall(r'[a-z0-9]+',query.lower()))-{'a','an','and','for','the','to','with','i','need'}
     results=[]
     for resource in catalog['resources']:
         workflow=resource.get('workflow',{})
         if asset and asset not in resource.get('categories',[]):continue
         if subcategory and subcategory not in resource.get('subcategories',[]):continue
+        if collection and collection not in resource.get('collections',[]):continue
+        if section and section not in resource.get('sectionTypes',[]):continue
         if requires and workflow.get('capabilities',{}).get(requires,{}).get('status')!='documented':continue
         if platform and not any(x.get('platform','').casefold()==platform.casefold() and x.get('status')=='documented' and x.get('scope')=='resource' and (not free or x.get('freeAccess') is True) for x in workflow.get('platforms',[])):continue
         if free and workflow.get('pricing',{}).get('freeAccess') is not True:continue
         if free and requires and workflow.get('capabilities',{}).get(requires,{}).get('freeAccess') is not True:continue
         labels=catalog.get('taxonomy',{}).get('subcategories',{})
-        topic_text=' '.join(labels.get(key,key.replace('-',' ')) for key in resource.get('subcategories',[]))
+        collection_labels=catalog.get('taxonomy',{}).get('collections',{})
+        collection_text=' '.join(collection_labels.get(key,{}).get('label',key.replace('-',' ')) for key in resource.get('collections',[]))
+        topic_text=' '.join(labels.get(key,key.replace('-',' ')) for key in resource.get('subcategories',[]))+' '+collection_text+' '+' '.join(resource.get('sectionTypes',[]))
         fields=[resource.get('name',''),resource.get('description',''),' '.join(resource.get('bestFor',[])),' '.join(resource.get('categories',[]))+' '+topic_text,workflow.get('primaryJob','')]
         score=sum(sum(token in field.lower() for token in tokens)*weight for field,weight in zip(fields,[2,3,4,2,2]))
         if tokens and score==0:continue
@@ -48,6 +52,8 @@ def main():
     parser.add_argument('--query',default='')
     parser.add_argument('--asset',choices=['ads','ugc','emails','sms','websites','apps','social','presentations','context','design'])
     parser.add_argument('--subcategory',choices=['design-context','agent-skills','prompts','video-motion','hooks','branding-type','sections-components','product-flows'],help='Optional topic within the primary asset categories; not a native integration requirement.')
+    parser.add_argument('--collection',choices=['landing-pages','website-sections','product-ui','design-systems','brand-identity','motion-interactions','design-context','agent-skills','prompts'])
+    parser.add_argument('--section',choices=['hero','navigation','pricing','testimonials','forms','cta','footer'],help='Require documented reference coverage of this section type, not the vendor own homepage.')
     parser.add_argument('--requires',choices=['mcp','api','figmaPlugin','browserExtension','markdown','skills'])
     parser.add_argument('--platform')
     parser.add_argument('--free',action='store_true',help='Require documented free access, which may be a limited preview. This does not establish free full-library or connector access.')
@@ -57,7 +63,7 @@ def main():
     if not 1<=args.limit<=20:parser.error('--limit must be between 1 and 20')
     try:
         catalog,source=load_catalog(args.catalog_file)
-        results=shortlist(catalog,args.query,args.asset,args.requires,args.platform,args.free,args.limit,subcategory=args.subcategory)
+        results=shortlist(catalog,args.query,args.asset,args.requires,args.platform,args.free,args.limit,subcategory=args.subcategory,collection=args.collection,section=args.section)
     except (OSError,ValueError,RuntimeError) as exc:
         print(str(exc),file=sys.stderr);return 1
     print(json.dumps({'catalogSource':source,'usedTemporaryFallback':False,'updatedAt':catalog.get('updatedAt'),'matches':results,'note':'Keyword shortlist only. Free access can be a limited preview; read all relevant pricing plans, billing periods and connector entitlements before recommending.'},indent=2,ensure_ascii=False))

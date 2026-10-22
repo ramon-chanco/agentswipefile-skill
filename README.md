@@ -22,11 +22,13 @@ Examples:
 
 ## Public entry points
 
-Browse ten asset categories and eight more specific topics, including hooks, prompts, brand identities, UI components and paywalls. The Python helper can combine them with documented integrations and pricing requirements:
+Browse ten asset types and nine focused collections, including landing pages, website sections, product UI, design systems, brand identity, motion, design context, agent skills and prompts. Resources can belong to several evidenced collections. The Python helper combines these with documented integrations, section coverage and pricing requirements. Legacy subcategory filters remain supported:
 
 ```bash
 python3 skills/agentswipefile/scripts/find_resources.py --asset apps --subcategory product-flows --requires mcp
 python3 skills/agentswipefile/scripts/find_resources.py --asset social --subcategory hooks
+python3 skills/agentswipefile/scripts/find_resources.py --collection website-sections --section pricing
+python3 skills/agentswipefile/scripts/find_resources.py --collection design-context --requires markdown
 ```
 
 - [Structured catalog](https://agentswipefile.com/catalog.json)

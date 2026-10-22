@@ -2,7 +2,7 @@
 name: agentswipefile
 description: Find creative swipe-file libraries and agent context tools for ads, UGC, emails, SMS, websites, apps, social content, decks, and design. Match resources to the task, budget, and available integrations using Agent Swipe File's public catalog.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Agent Swipe File
@@ -25,7 +25,18 @@ python3 scripts/find_resources.py --query "paid social references" --asset ads -
 
 Run the script from this skill folder or use its absolute path. It performs public GET requests only. `--catalog-file` supports a previously downloaded catalog. Keyword scores are a discovery aid; assess fit from the actual resource evidence before making a recommendation.
 
-## Browse by asset and topic
+## Browse by asset, collection and section
+
+Start with the nine purpose-specific collections in `taxonomy.collections`. Use `--collection landing-pages`, `website-sections`, `product-ui`, `design-systems`, `brand-identity`, `motion-interactions`, `design-context`, `agent-skills` or `prompts`. A resource may belong to several collections when each is evidenced. For section references, combine `--collection website-sections --section hero` (or `navigation`, `pricing`, `testimonials`, `forms`, `cta`, `footer`). Section labels describe actual reference coverage, not the vendor’s own marketing page or price table.
+
+```bash
+python3 scripts/find_resources.py --collection website-sections --section pricing
+python3 scripts/find_resources.py --collection product-ui --requires mcp
+```
+
+The ten legacy asset categories and eight secondary topics remain supported for compatibility.
+
+## Legacy asset and topic filters
 
 Keep the ten primary asset types and use secondary topics when the task is more specific. Read the live catalog's `taxonomy` maps. The optional helper supports `--subcategory design-context`, `agent-skills`, `prompts`, `video-motion`, `hooks`, `branding-type`, `sections-components` or `product-flows`. For example:
 

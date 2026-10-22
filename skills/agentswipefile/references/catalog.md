@@ -9,6 +9,8 @@ Primary origin: `https://agentswipefile.com`. Fetch `/catalog.json` without auth
 | `slug`, `name`, `url`, `outboundUrl` | Stable directory key, display name, original vendor address, and tracked referral link |
 | `description`, `kind`, `bestFor`, `editorialNote` | Original editorial purpose and fit guidance |
 | `categories` | Asset types covered, not platform integrations |
+| `collections` | Purpose-specific, multi-label collection keys. Read `taxonomy.collections` for labels, descriptions and canonical collection URLs. |
+| `sectionTypes` | Explicit reference coverage: hero, navigation, pricing, testimonials, forms, CTA or footer. Missing means not established. |
 | `subcategories` | Secondary topic keys, such as hooks or design context. These describe the reference content, not a native integration. |
 | `image` | Source-page screenshot preview relative to the catalog origin |
 | `checkedAt`, `sourceStatus` | Public source review date and scope |
