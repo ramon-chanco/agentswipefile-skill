@@ -14,7 +14,7 @@ def load_catalog(path=None):
     if path:
         return json.loads(Path(path).read_text()),'local file'
     try:
-        request=urllib.request.Request(PRIMARY,headers={'User-Agent':'AgentSwipeFile-Skill/1.1'})
+        request=urllib.request.Request(PRIMARY,headers={'User-Agent':'AgentSwipeFile-Skill/1.2'})
         with urllib.request.urlopen(request,timeout=20) as response:
             catalog=json.loads(response.read(4_000_000))
         if not isinstance(catalog.get('resources'),list):
